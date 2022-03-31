@@ -1,4 +1,4 @@
-This folder contains: 
+The DATASET folder contains:
 - IMAGES: The original images that contains 5 sub-folders with the images obtained with the 5 different sensors. 
     The names of the images follow this pattern: Im_[GT|noGT]_<Name of the sensor>_<number of the image>.<format>. 
     - GT/noGT means with Ground Truth/without Ground Truth. 
