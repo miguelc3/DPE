@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Loading dataset
-DATADIR = "..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3"
-IMG_SIZE = 224
+DATADIR = "..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_4"
+IMG_SIZE = 450
 batch_size = 1
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -33,7 +33,7 @@ test_images = np.array(test_images)
 test_labels = np.array(test_labels)
 
 # Loading model
-model = tf.keras.models.load_model('../models/model_2')
+model = tf.keras.models.load_model('../models/model_1')
 val_loss, val_acc = model.evaluate(test_images,  test_labels, batch_size=1)
 
 print(val_acc)

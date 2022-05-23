@@ -15,24 +15,20 @@ def equ(image):
     return img
 
 
-def process(path_img, path_save):
-
-    img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
+def process(img, path_save, save_name):
     # proc_img = bin(equ(img))
     proc_img = bin(img)
-
-    file_name = 'ok1_bin.png'
-    cv2.imwrite(os.path.join(path_save, file_name), proc_img)
-
-    cv2.imshow('IMG', proc_img)
-    cv2.waitKey(0)
+    cv2.imwrite(os.path.join(path_save, save_name), proc_img)
+    return proc_img
 
 
 def main():
 
     path_img = "..\..\..\imagens\\test_images\PointGrey\\testes\\ok1.png"
     path_save = "..\..\..\imagens\\test_images\PointGrey\\testes"
-    process(path_img, path_save)
+
+    img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
+    process(img, path_save, 'ok1_bin.png')
 
 
 if __name__ == "__main__":

@@ -1,63 +1,78 @@
 import tensorflow as tf
-from tensorflow.keras import layers
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+import matplotlib.pyplot as plt
 
 
-DATADIR = "..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_2"
-# path = "..\..\imagens\\test_images\PointGrey\save_ds"
-IMG_SIZE = 450
-batch_size = 1
+DATADIR = "..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_4"
+checkpoint_path = '..\\models\\model_3_32_best\\cp.ckpt'
+IMG_SIZE = 224
+batch_size = 32
 
+train_ds = tf.keras.utils.image_dataset_from_directory(
+      DATADIR,
+      validation_split=0.2,
+      subset="training",
+      seed=123,
+      image_size=(IMG_SIZE, IMG_SIZE),
+      batch_size=batch_size)
 
-class_names = ['nok', 'ok']
+val_ds = tf.keras.utils.image_dataset_from_directory(
+      DATADIR,
+      validation_split=0.2,
+      subset="validation",
+      seed=123,
+      image_size=(IMG_SIZE, IMG_SIZE),
+      batch_size=batch_size)
 
-# Data augmentation object
-train_datagen = ImageDataGenerator(
-        rescale=1./255,
-        shear_range=0.2,
-        zoom_range=0.2,
-        validation_split=0.2
-        )
+class_names = train_ds.class_names
+print(class_names)
 
-train_generator = train_datagen.flow_from_directory(
-        DATADIR,
-        target_size=(IMG_SIZE, IMG_SIZE),
-        batch_size=batch_size,
-        class_mode='sparse',
-        shuffle=True,
-        subset='training')
+# Normalize pixel values to be between 0 and 1
+normalization_layer = tf.keras.layers.Rescaling(1./255)
 
-validation_generator = train_datagen.flow_from_directory(
-        DATADIR,
-        target_size=(IMG_SIZE, IMG_SIZE),
-        batch_size=batch_size,
-        class_mode='sparse',
-        shuffle=True,
-        subset='validation')
+normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
+image_batch, labels_batch = next(iter(normalized_ds))
 
-num_classes = 2
+# configure dataset for performance
+AUTOTUNE = tf.data.AUTOTUNE
 
-# Create the model
+train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
+val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
+
+# -----------------------------
+# Picking a pre trained model
+# -----------------------------
+# Pre-trained model ResNet50
+IMG_SHAPE = (IMG_SIZE, IMG_SIZE, 3)
+
+base_model = tf.keras.applications.resnet50.ResNet50(input_shape=IMG_SHAPE,
+                                                     include_top=False,
+                                                     weights='imagenet'
+                                                     )
+
+base_model.layers.pop()
+
+# base_model.summary()
+base_model.trainable = False
+
+# Build the model
+num_classes = len(class_names)
+global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
+
 model = tf.keras.Sequential([
-  # Preprocessing layers
-  # resize_and_rescale,
-  # data_augmentation,
-  # Rest of the model
-  tf.keras.layers.Rescaling(1./255),
-  tf.keras.layers.Conv2D(32, 3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(64, 3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(64, 3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(128, activation='relu'),
-  # add softmax layer
+  base_model,
+  global_average_layer,
+  tf.keras.layers.Dense(1024, activation='relu'),
   tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
+
+# Save best model
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_path,
+    save_weights_only=True,
+    monitor='val_accuracy',
+    mode='max',
+    save_best_only=True)
 
 # Compile the model
 model.compile(
@@ -66,14 +81,49 @@ model.compile(
   metrics=['accuracy'])
 
 # Train the model
-model.fit(
-  train_generator,
-  validation_data=validation_generator,
-  epochs=50
+history = model.fit(
+  train_ds,
+  validation_data=val_ds,
+  epochs=400,
+  callbacks=[model_checkpoint_callback]
 )
 
+# Save the model
+model.save('..\\models\\model_3_32')
 
-# Making predictions
-model.save('../models/model_3')
+# Unbatch dataset
+val_ds = val_ds.unbatch()
+test_images = list(val_ds.map(lambda x, y: x))
+test_labels = list(val_ds.map(lambda x, y: y))
+
+# Transform it into numpy arrays
+test_images = np.array(test_images)
+test_labels = np.array(test_labels)
+
+# Evaluate the model
+val_loss, val_acc = model.evaluate(test_images, test_labels, batch_size=1)
+print('Validation accuracy = ' + str(val_acc))
+
+# List all data in history
+print(history.history.keys())
+
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
 
 

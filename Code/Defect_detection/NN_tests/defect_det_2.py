@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 
 DATADIR = "..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_4"
+checkpoint_path = '..\\models\\model_2_2_best\\cp.ckpt'
 IMG_SIZE = 224
 batch_size = 1
 
@@ -48,6 +49,7 @@ base_model = tf.keras.applications.resnet50.ResNet50(input_shape=IMG_SHAPE,
                                                      include_top=False,
                                                      weights='imagenet'
                                                      )
+
 # base_model.summary()
 base_model.trainable = False
 
@@ -61,6 +63,14 @@ model = tf.keras.Sequential([
   tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
 
+# Save best model
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_path,
+    save_weights_only=True,
+    monitor='val_accuracy',
+    mode='max',
+    save_best_only=True)
+
 # Compile the model
 model.compile(
   optimizer='adam',
@@ -71,7 +81,8 @@ model.compile(
 history = model.fit(
   train_ds,
   validation_data=val_ds,
-  epochs=300
+  epochs=300,
+  callbacks=[model_checkpoint_callback]
 )
 
 # Save the model

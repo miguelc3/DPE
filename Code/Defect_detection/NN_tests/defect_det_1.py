@@ -2,14 +2,11 @@
 
 import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+import matplotlib.pyplot as plt
 
-
-
-DATADIR ="..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_2"
-IMG_SIZE = 450
-batch_size = 1
+DATADIR ="..\..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_4"
+IMG_SIZE = 224
+batch_size = 5
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
       DATADIR,
@@ -68,12 +65,45 @@ model.compile(
   metrics=['accuracy'])
 
 # Train the model
-model.fit(
+history = model.fit(
   train_ds,
   validation_data=val_ds,
   epochs=250
 )
 
 # Save model
-model.save('../models/model_1')
+model.save('../models/model_1_1')
 
+# Unbatch dataset
+val_ds = val_ds.unbatch()
+test_images = list(val_ds.map(lambda x, y: x))
+test_labels = list(val_ds.map(lambda x, y: y))
+
+# Transform it into numpy arrays
+test_images = np.array(test_images)
+test_labels = np.array(test_labels)
+
+# Evaluate the model
+val_loss, val_acc = model.evaluate(test_images, test_labels, batch_size=1)
+print('Validation accuracy = ' + str(val_acc))  # 0.83
+
+# List all data in history
+print(history.history.keys())
+
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
