@@ -1,4 +1,3 @@
-import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing import image
 import matplotlib.pyplot as plt
@@ -6,10 +5,10 @@ import glob
 import cv2
 
 # Loading dataset
-DATADIR = "..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_1\\nok\*.png"
+DATADIR = "..\..\imagens\\DATASETS_pg\\Falta_tinta\\OK\\*.png"
 
 # Path to save images after data augmentation
-path_save = "..\..\imagens\\test_images\PointGrey\Dataset_pattern_3_2\\nok"
+path_save = "..\..\imagens\\DATASETS_pg\\3_FALTA_TINTA\\DATASET_1\\OK"
 
 # creates a data generator object that transforms images
 datagen = ImageDataGenerator(
@@ -17,8 +16,8 @@ datagen = ImageDataGenerator(
                              width_shift_range=1.5,
                              height_shift_range=1.5,
                              shear_range=0.2,
-                             zoom_range=[0.7, 1],
-                             # zoom_range=0.2,
+                             # zoom_range=[0.7, 1],
+                             zoom_range=0.15,
                              horizontal_flip=True,
                              vertical_flip=True,
                              fill_mode='nearest'

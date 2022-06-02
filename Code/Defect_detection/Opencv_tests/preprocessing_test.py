@@ -1,7 +1,6 @@
-import numpy as np
 import cv2
-import glob
 import os
+from skimage import io
 
 
 def bin(image):
@@ -16,19 +15,19 @@ def equ(image):
 
 
 def process(img, path_save, save_name):
-    # proc_img = bin(equ(img))
-    proc_img = bin(img)
+    proc_img = bin(equ(img))
+    # proc_img = bin(img)
     cv2.imwrite(os.path.join(path_save, save_name), proc_img)
     return proc_img
 
 
 def main():
 
-    path_img = "..\..\..\imagens\\test_images\PointGrey\\testes\\ok1.png"
-    path_save = "..\..\..\imagens\\test_images\PointGrey\\testes"
+    path_img = "..\..\..\imagens\\DATASETS_pg\\Falta_tinta\\6.png"
+    path_save = "..\..\..\imagens\\DATASETS_pg\\Falta_tinta"
 
     img = cv2.imread(path_img, cv2.IMREAD_GRAYSCALE)
-    process(img, path_save, 'ok1_bin.png')
+    process(img, path_save, '6_preproc.png')
 
 
 if __name__ == "__main__":
