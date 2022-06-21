@@ -259,12 +259,15 @@ def main():
             msg = 'SURFACE NO PATTERN IS OK'
             print(msg)
 
+    '''
     if pattern_ok and no_pattern_ok:
         msg = 'Surface is ok from both models'
         print(msg)
         feedback('green', msg)
     else:
         print('Surface is not ok')
+    
+    '''
 
 
 if __name__ == '__main__':

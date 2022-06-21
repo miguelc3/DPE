@@ -5,10 +5,10 @@ import glob
 import cv2
 
 # Loading dataset
-DATADIR = "..\..\imagens\\DATASETS_pg\\Falta_tinta\\OK\\*.png"
+DATADIR = "..\..\imagens\\DATASETS_pg\\Excesso_po\\examples_preproc\\*.png"
 
 # Path to save images after data augmentation
-path_save = "..\..\imagens\\DATASETS_pg\\3_FALTA_TINTA\\DATASET_1\\OK"
+path_save = "..\..\imagens\\DATASETS_pg\\4_RISCOS_AMOLG_PO\\Dataset_40\\EXCESSO_PO"
 
 # creates a data generator object that transforms images
 datagen = ImageDataGenerator(
@@ -16,8 +16,8 @@ datagen = ImageDataGenerator(
                              width_shift_range=1.5,
                              height_shift_range=1.5,
                              shear_range=0.2,
-                             # zoom_range=[0.7, 1],
-                             zoom_range=0.15,
+                             zoom_range=[0.7, 1],
+                             # zoom_range=0.15,
                              horizontal_flip=True,
                              vertical_flip=True,
                              fill_mode='nearest'

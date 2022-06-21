@@ -159,7 +159,7 @@ def main():
         imgs = divide_image(img_original)
 
         try:
-            latest_nr = newest(path_save_pattern)[13:-4]
+            latest_nr = newest(path_save_pattern)[19:-4]
             a = int(latest_nr) + 1
         except:
             a = 1
@@ -214,7 +214,7 @@ def main():
         imgs = divide_image(img_original)
 
         try:
-            latest_nr = newest(path_save_no_pattern)[13:-4]
+            latest_nr = newest(path_save_no_pattern)[22:-4]
             a = int(latest_nr) + 1
         except:
             a = 1
@@ -254,7 +254,7 @@ def main():
 
         no_pattern_oks.append(no_pattern_ok)
 
-
+    # TODO -> find a way to match the results of both predictions, if both are ok -> surface ok
     if pattern_ok and no_pattern_ok:
         surface_ok = True
 

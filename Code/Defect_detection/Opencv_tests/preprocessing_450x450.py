@@ -32,10 +32,10 @@ def process(path_imgs, path_save):
 
 def main():
     # Path for images to process
-    path_imgs = "..\..\..\imagens\\DATASETS_pg\\RISCOS_AMOLG\\captured_images\\riscos_40\\*.png"
+    path_imgs = "..\..\..\imagens\\DATASETS_pg\\Excesso_po\\examples\\*.png"
 
     # Path for save images
-    path_save = "..\..\..\imagens\\DATASETS_pg\\RISCOS_AMOLG\\Dataset_40\\RISCOS"
+    path_save = "..\..\..\imagens\\DATASETS_pg\\4_RISCOS_AMOLG_PO\\Dataset_40\\EXCESSO_PO"
 
     process(path_imgs, path_save)
 
