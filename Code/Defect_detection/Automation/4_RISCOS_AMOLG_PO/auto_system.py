@@ -18,12 +18,9 @@ class_names_no_pattern = ['FALTA_TINTA', 'OK']
 global model_pattern
 global model_no_pattern
 global pattern_ok
-pattern_ok = True
 global no_pattern_ok
-no_pattern_ok = True
-
 global counter_images
-counter_images = 0
+global secs
 
 global continue_recording
 continue_recording = True
@@ -118,10 +115,11 @@ def acquire_and_display_images(cam, nodemap, nodemap_tldevice):
                     # Getting the image data as a numpy array
                     image_data = image_result.GetNDArray()
 
-                    # TODO: find a way to get the image every x seconds without use the sleep method so that the
-                    #  live view does not stop
-                    got_image(image_data)  # GET IMAGE TO ANALYSE EVERY 7 SECONDS
-                    time.sleep(8)
+                    global secs
+                    t = time.time()
+                    if t - secs > 8:
+                        got_image(image_data)  # GET IMAGE TO ANALYSE EVERY 8 SECONDS
+                        secs = time.time()
 
                     # Draws an image on the current figure
                     plt.imshow(image_data, cmap='gray')  # CHANGE - commented this line
@@ -238,10 +236,11 @@ def got_image(img):
 
     image_pil = Image.fromarray(img)  # convert numpy.ndarray to PIL image
 
-    # plt.imshow(image_pil, cmap='gray')
-    # plt.show(block=False)
-    # plt.pause(1.5)
-    # plt.close()
+    plt.figure(2)
+    plt.imshow(image_pil, cmap='gray')
+    plt.show(block=False)
+    plt.pause(1.5)
+    plt.close()
 
     # Send image to be analysed for model with or without pattern
     global counter_images
@@ -323,6 +322,27 @@ def predict(model, pattern, img, IMG_SIZE):
     return class_predict
 
 
+def feedback(color, msg):
+
+    # predefined value of bgr
+    bgr = (255, 255, 255)
+
+    if color == 'red':
+        bgr = (0, 0, 255)
+    elif color == 'green':
+        bgr = (0, 255, 0)
+
+    # Create a blank 300x300 black image
+    image = np.zeros((800, 1200, 3), np.uint8)
+
+    # Fill image with red color(set each pixel to red)
+    image[:] = bgr
+
+    cv2.imshow(msg, image)
+    cv2.waitKey(2000)
+    cv2.destroyAllWindows()
+
+
 def predict_pattern(image_pil):
     global pattern_ok
     print('Predicting with pattern')
@@ -345,34 +365,30 @@ def predict_pattern(image_pil):
             pattern_ok = False
 
             msg = 'SURFACE IS DAMAGED: RISCOS'
-            # print(msg)
-            # feedback('red', msg)
-            # break
+            feedback('red', msg)
+            break
 
         elif prediction == 'AMOLGADELAS':  # prediction is "amolgadelas" -> break cycle
             pattern_ok = False
 
             msg = 'SURFACE IS DAMAGED: AMOLGADELAS'
-            print(msg)
-            # feedback('red', msg)
-            # break
+            feedback('red', msg)
+            break
 
         elif prediction == 'PO':  # prediction is "PO" -> break cycle
             pattern_ok = False
 
             msg = 'SURFACE IS DAMAGED: EXCESSO DE PÓ'
-            # print(msg)
-            # feedback('red', msg)
-            # break
-
-        # elif prediction == 'OK':  # Image is predicted to be ok
-            # print('OK')
+            feedback('red', msg)
+            break
 
         elif prediction == 'not_sure':  # certainty too low -> image is assumed to be ok
             print('Unsure about the class, it is assumed to be ok.')
 
         if i == 4:
-            print('SURFACE PATTERN IS OK')
+            pattern_ok = True
+            msg = 'SURFACE PATTERN IS OK'
+            feedback('green', msg)
 
 
 def predict_no_pattern(original_image):
@@ -397,21 +413,24 @@ def predict_no_pattern(original_image):
             no_pattern_ok = False
 
             msg = 'SURFACE IS DAMAGED: FALTA TINTA'
-            # print(msg)
-            # feedback('red', msg)
-            # break
-
-        # elif prediction == 'OK':  # Image is predicted to be ok
-            # print('OK')
+            feedback('red', msg)
+            break
 
         elif prediction == 'not_sure':  # certainty too low -> image is assumed to be ok
             print('Unsure about the class, it is assumed to be ok.')
 
         if i == 4:
-            print('SURFACE NO PATTERN IS OK')
+            no_pattern_ok = True
+            msg = 'SURFACE NO PATTERN IS OK'
+            feedback('green', msg)
+
+    final_decision()
 
 
 def final_decision():
+    global pattern_ok
+    global no_pattern_ok
+
     if pattern_ok and no_pattern_ok:
         print('Surface is ok by both models')
         # Send info to MES
@@ -426,6 +445,14 @@ def main():
 
     # ==================================================
     # Part added by me
+    global pattern_ok
+    global no_pattern_ok
+    global counter_images
+    global secs
+    pattern_ok = True
+    no_pattern_ok = True
+    counter_images = 0
+    secs = time.time()
 
     # Models checkpoints
     checkpoint_filepath_pattern = '../../models/4_RISCOS_AMOLG_PO/model_1_best/cp.ckpt'
@@ -491,8 +518,3 @@ if __name__ == '__main__':
         sys.exit(0)
     else:
         sys.exit(1)
-
-# TODO
-# Adicionar condição para verificar se ambas as previsoes estao ok
-# Fazer testes no lab
-

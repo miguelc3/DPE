@@ -3,7 +3,7 @@ import numpy as np
 import numpy.matlib
 from PIL import Image
 
-nr_cycles = 30
+nr_cycles = 20
 A = 0.5
 B = 0.5
 f = 1
@@ -30,7 +30,7 @@ im1 = np.matlib.repmat(y1, Image_Height, 1)
 img = Image.fromarray(im1.astype(np.uint8))
 
 img_resize = img.resize((4096, 2160))
-img_resize.save("vertical_pattern.png")
+img_resize.save("vertical_pattern_20.png")
 img_resize.show()
 
 
