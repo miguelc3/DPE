@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+  <header eventId="0" eventName="partProcessed" version="1.0" eventSwitch="160" contentType="3">
+    <location lineNo="4" statNo="888" statIdx="1" fuNo="1" workPos="1" toolPos="0" application="PLC" processName="" processNo="9999" />
+  </header>
+  <event>
+    <partProcessed identifier="AtmoTestOP90" />
+  </event>
+  <body>
+    <items>
+      <item name="PartState" value="4" dataType="3" />
+      <item name="nextProcessNo" value="1090" dataType="3" />
+    </items>
+    <structs>
+      <resHead nioBits="0" result="1" typeNo="1111111111" workingCode="0" />
+    </structs>
+  </body>
+</root>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+  <header eventId="15" eventName="partProcessed" version="1.0" eventSwitch="-1" timeStamp="2021-02-24T11:54:59.3481771+00:00" contentType="3">
+    <location lineNo="9999" statNo="999" statIdx="1" fuNo="1" workPos="1" toolPos="1" application="PLC" processName="KDE_Test_Bench_2" processNo="405" />
+  </header>
+  <event>
+    <result returnCode="0">
+    </result>
+    <trace />
+  </event>
+  <body />
+</root>

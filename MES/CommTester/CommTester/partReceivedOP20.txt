@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+  <header eventId="0" eventName="partReceived" version="1.0" eventSwitch="-1" timeStamp="2014-09-26T08:49:48.0418703+02:00" contentType="3">
+    <location lineNo="4" statNo="20" statIdx="1" fuNo="1" workPos="1" toolPos="1" application="PLC" processName="OP20" processNo="1020" />
+  </header>
+  <event>
+    <partReceived identifier="123456789012345678901234567890123456" typeNo="F03Z1Z0010" typeVar="" />
+  </event>
+  <body />
+</root>

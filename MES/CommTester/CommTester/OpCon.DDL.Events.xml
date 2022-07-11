@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) von Thomas Eiberle (Robert Bosch GmbH) bearbeitet -->
+<root>
+  <events>
+    <plcOperationModeChanged>
+      <item name="modeOn" required="true" refId="3"/>
+      <item name="operationMode" required="true" refId="2"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1"/>
+      <item name="shift" required="false" refId="2"/>
+      <item name="charge" required="false" refId="1"/>
+      <item name="specPrgNo" required="false" refId="2"/>
+    </plcOperationModeChanged>
+    <plcChangeOverStarted>
+      <item name="typeNo" required="true" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcChangeOverStarted>
+    <plcChangeOver>
+      <item name="typeNo" required="true" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcChangeOver>
+    <plcEventOn/>
+    <plcEventOff/>
+    <plcSystemStarted>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcSystemStarted>
+    <plcStationSwitchedOff/>
+    <plcError>
+      <item name="errorNo" required="true" refId="2"/>
+      <item name="errorText" required="true" refId="1"/>
+      <item name="errorType" required="true" refId="2"/>
+      <item name="errorState" required="false" refId="2"/>
+      <item name="modeOn" required="false" refId="3"/>
+      <item name="operationMode" required="false" refId="2"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+      <item name="chainNo" required="false" refId="2"/>
+    </plcError>
+    <partReceived>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </partReceived>
+    <partStateChanged/>
+    <partProcessed>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+    </partProcessed>
+    <dataUploadRequired/>
+    <dataDownloadRequired/>
+    <partDisplaced>
+      <item name="oldIdentifier" required="true" refId="1" maxLength="80"/>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+    </partDisplaced>
+    <partProcessingStarted>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+    </partProcessingStarted>
+    <partProcessingPaused>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+    </partProcessingPaused>
+    <partProcessingAborted>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+    </partProcessingAborted>
+    <plcPartsMissingStarted>
+      <item name="missingParts" required="true" refId="5"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcPartsMissingStarted>
+    <plcPartsMissing>
+      <item name="missingParts" required="true" refId="5"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcPartsMissing>
+    <plcJamStarted>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcJamStarted>
+    <plcJam>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcJam>
+    <plcOperatorRequiredStarted>
+      <item name="operator" required="true" refId="5"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcOperatorRequiredStarted>
+    <plcOperatorRequired>
+      <item name="operator" required="true" refId="5"/>
+      <item name="typeNo" required="false" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+    </plcOperatorRequired>
+    <plcShiftChanged>
+      <item name="shiftNo" required="true" refId="2"/>
+    </plcShiftChanged>
+    <plcChargeChanged>
+      <item name="charge" required="true" refId="1" maxLength="80"/>
+    </plcChargeChanged>
+    <plcMaterialChangeStarted>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+      <item name="oldIdentifier" required="false" refId="1" maxLength="80"/>
+      <item name="oldQuantity" required="false" refId="4" maxLength="80"/>
+      <item name="name" required="false" refId="1" maxLength="80"/>
+    </plcMaterialChangeStarted>
+    <plcMaterialChanged>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+      <item name="oldIdentifier" required="false" refId="1" maxLength="80"/>
+      <item name="oldQuantity" required="false" refId="4" maxLength="80"/>
+      <item name="name" required="false" refId="1" maxLength="80"/>
+    </plcMaterialChanged>
+    <plcToolChangeStarted>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+      <item name="oldIdentifier" required="false" refId="1" maxLength="80"/>
+      <item name="name" required="false" refId="1" maxLength="80"/>
+    </plcToolChangeStarted>
+    <plcToolChanged>
+      <item name="identifier" required="true" refId="1" maxLength="80"/>
+      <item name="oldIdentifier" required="false" refId="1" maxLength="80"/>
+      <item name="name" required="false" refId="1" maxLength="80"/>
+    </plcToolChanged>
+    <plcLogIn>
+      <item name="user" required="true" refId="1" maxLength="80"/>
+      <item name="pwd" required="true" refId="1"/>
+    </plcLogIn>
+    <plcLogOff/>
+  </events>
+  <common>
+    <extension name="resHead">
+      <item name="result" required="true" refId="2"/>
+      <item name="typeNo" required="true" refId="1" maxLength="10"/>
+      <item name="typeVar" required="false" refId="1" maxLength="10"/>
+      <item name="typeVersion" required="false" refId="1" maxLength="80"/>
+      <item name="charge" required="false" refId="1" maxLength="80"/>
+      <item name="workingCode" required="false" refId="2"/>
+      <item name="nioBits" required="true" refId="2"/>
+      <item name="workCycleCount" required="false" refId="2"/>
+      <item name="cycleTimePrev" required="false" refId="2"/>
+      <item name="orderID" required="false" refId="1" maxLength="80"/>
+      <item name="batch" required="false" refId="1" maxLength="80"/>
+      <item name="machineID" required="false" refId="1" maxLength="80"/>
+    </extension>
+  </common>
+  <dataTypes>
+    <dataType id="1">System.String</dataType>
+    <dataType id="2">System.Int32</dataType>
+    <dataType id="3">System.Boolean</dataType>
+    <dataType id="4">System.Double</dataType>
+    <dataType id="5">System.UInt32</dataType>
+  </dataTypes>
+</root>

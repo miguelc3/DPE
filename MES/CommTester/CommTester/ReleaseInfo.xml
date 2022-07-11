@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<productInfo>
+  <name>DirectDataLink</name>
+  <version build="0" released="true">3.6.0</version>
+  <releaseDate>06-Dec-2013</releaseDate>
+  <comment>
+    * Service Registry
+    * New commands for PackagingControlAccess, LineControlAccess
+  </comment>
+</productInfo>

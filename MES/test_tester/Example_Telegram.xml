@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <header version="V2.x" eventId="65" eventName="partProcessed" eventSwitch="1" contentType="3" timeStamp="2022-06-28T15:12:33.5580347+01:00">
+    <location lineNo="8533" statNo="611" statIdx="1" fuNo="1" workPos="1" toolPos="1" processNo="611" processName="Ensaio de chama lote" application="PLC" />
+  </header>
+  <event>
+    <partProcessed identifier="83702740011728738729600" />
+  </event>
+  <body>
+    <structs>
+      <resHead result="1" typeNo="8738729600" nioBits="0" cycleTimePrev="193440" />
+    </structs>
+    <structArrays>
+      <array name="TestData">
+        <structDef>
+          <item name="name" dataType="8" />
+          <item name="value" dataType="4" />
+          <item name="unit" dataType="8" />
+        </structDef>
+        <values>
+        </values>
+      </array>
+      <array name="TestInfo">
+        <structDef>
+          <item name="name" dataType="8" />
+          <item name="value" dataType="8" />
+          <item name="unit" dataType="8" />
+        </structDef>
+        <values>
+          <item name="T01 - Detecao Peca Colocada - Operator_Description" value="Detecao Peca Colocada" unit="" />
+          <item name="T01 - Detecao Peca Colocada - Operator_ID" value="1" unit="" />
+          <item name="T01 - Detecao Peca Colocada - Detector Number" value="B836" unit="" />
+        </values>
+      </array>
+      <array name="TestResults_String">
+        <structDef>
+          <item name="name" dataType="8" />
+          <item name="value" dataType="8" />
+          <item name="setValue" dataType="8" />
+          <item name="resultState" dataType="3" />
+        </structDef>
+        <values>
+        </values>
+      </array>
+      <array name="TestResults">
+        <structDef>
+          <item name="name" dataType="8" />
+          <item name="value" dataType="4" />
+          <item name="resultState" dataType="3" />
+          <item name="loLim" dataType="4" />
+          <item name="upLim" dataType="4" />
+          <item name="setValue" dataType="4" />
+          <item name="checkType" dataType="2" />
+          <item name="unit" dataType="8" />
+        </structDef>
+        <values>
+          <item name="Measuring CH4 Final" value="74" resultState="1" loLim="30.0" upLim="1200.0" setValue="615.0" checkType="5" unit="ppm" />
+        </values>
+      </array>
+      <array name="ComponentsA">
+        <structDef>
+          <item name="class" dataType="8" />
+          <item name="compIdentifier" dataType="8" />
+          <item name="batch" dataType="8" />
+          <item name="state" dataType="8" />
+          <item name="manufacturer" dataType="8" />
+          <item name="typeNo" dataType="8" />
+        </structDef>
+        <values>
+        </values>
+      </array>
+      <array name="ComponentsB">
+        <structDef>
+          <item name="MatLabel" dataType="8" />
+          <item name="batchName" dataType="8" />
+          <item name="manufacturer" dataType="8" />
+          <item name="batchclass" dataType="8" />
+          <item name="typeNo" dataType="8" />
+          <item name="quantity" dataType="3" />
+        </structDef>
+        <values>
+        </values>
+      </array>
+      <array name="FCodeResult">
+        <structDef>
+          <item name="name" dataType="4" />
+          <item name="value" dataType="4" />
+        </structDef>
+        <values>
+        </values>
+      </array>
+    </structArrays>
+  </body>
+</root>

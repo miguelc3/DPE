@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+  <header eventId="0" eventName="partProcessed" version="1.0" eventSwitch="-1" contentType="3">
+    <location lineNo="100" statNo="100" statIdx="1" fuNo="1" workPos="1" toolPos="1" application="PLC" processName="" processNo="3050" />
+  </header>
+  <event>
+    <partProcessed identifier="37305580098498718667563" />
+  </event>
+  <body>
+    <items>
+      <item name="nextProcessNo" value="3050" dataType="3" />
+      <item name="partState" value="4" dataType="3" />
+    </items>
+    <structs>
+      <resHead charge="" cycleTimePrev="0" nioBits="0" result="1" typeNo="1111111111" typeVar="11" typeVersion="" workingCode="0" />
+    </structs>
+  </body>
+</root>

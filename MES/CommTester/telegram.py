@@ -1,0 +1,54 @@
+from MESConnection import MESConnection
+# If we import only MesConnection doesn't work -> we need to import class MESConnection inside MESConnection file
+import socket
+import time
+
+header = MESConnection.Header("1")
+locationHeader = MESConnection.LocationHeader("9999", "999", "1", "1", "1", "1", "1", "Defect_detection", "PC")
+# resultHeader = MESConnection.ResultHeader("1", msg)  # msg was not defined
+resultHeader = MESConnection.ResultHeader("1", "1", workingCode="1")  # 1 = Good / 2 = Bad , product number
+
+""" 
+Constructs the telegram to be sent
+Uses a header, locationHeader and resultHeader instances
+Uses the identifier set beforehand. If no identifier was set, it is assigned the value "test"
+"""
+
+mesConnection = MESConnection(header, locationHeader, resultHeader, "SERIAL",
+                              resHeadEnabled=True)
+
+# ============ TEST ADD ARRAY ===================
+
+
+# array = MESConnection.customArray('teste')
+# array.addItems()
+# array.addItem(name='Defeito_1', value=0, resultState=2, unit="", locDetails="")
+# array = array.addItems()
+
+# Create telegram
+message = mesConnection.CreateTelegram()
+
+# Transform the message into an array of bytes
+telegramBytes = mesConnection.BuildTelegram(message)
+
+# Create socket -> s wasn't defined
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+target_port = 55065
+target_host = "localhost"
+s.connect((target_host, target_port))
+
+s.send(telegramBytes)
+
+# MES response
+# Remove the first four bytes (they are just the size of the message)
+
+data = s.recv(1024).decode(encoding='utf-8', errors='ignore')
+# print(data)
+
+telegramResult = mesConnection.ResultTelegram().ProcessResponse(data)
+print(telegramResult)
+
+time.sleep(1) 
+
+s.close() 
+
