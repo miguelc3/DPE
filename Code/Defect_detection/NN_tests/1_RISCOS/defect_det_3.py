@@ -42,6 +42,7 @@ val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 # -----------------------------
 # Picking a pre trained model
 # -----------------------------
+
 # Pre-trained model ResNet50
 IMG_SHAPE = (IMG_SIZE, IMG_SIZE, 3)
 
@@ -58,6 +59,7 @@ base_model.trainable = False
 # Build the model
 num_classes = len(class_names)
 global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
+
 
 model = tf.keras.Sequential([
   base_model,

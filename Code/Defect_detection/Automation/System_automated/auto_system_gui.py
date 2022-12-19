@@ -9,7 +9,8 @@ import time
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
-from PIL import Image
+from tkinter import *
+from PIL import ImageTk, Image
 from MESConnection import MESConnection
 import socket
 import datetime
@@ -100,10 +101,10 @@ def acquire_and_display_images(cam, nodemap, nodemap_tldevice):
         print('Press enter to close the program..')
 
         # Figure(1) is default so you can omit this line. Figure(0) will create a new window every time program hits this line
-        fig = plt.figure(1)
+        # fig = plt.figure(1)
 
         # Close the GUI when close event happens
-        fig.canvas.mpl_connect('close_event', handle_close)
+        # fig.canvas.mpl_connect('close_event', handle_close)
 
         # Retrieve and display images
         while continue_recording:
@@ -123,10 +124,12 @@ def acquire_and_display_images(cam, nodemap, nodemap_tldevice):
                     image_data = image_result.GetNDArray()
 
                     global secs
-                    t = time.time()
-                    if t - secs > 8:
-                        got_image(image_data)  # GET IMAGE TO ANALYSE EVERY 8 SECONDS
-                        secs = time.time()
+                    # t = time.time()
+                    # if t - secs > 8:
+                    #     got_image(image_data)  # GET IMAGE TO ANALYSE EVERY 8 SECONDS
+                    #     secs = time.time()
+
+                    got_image(image_data)
 
                     # Draws an image on the current figure
                     plt.imshow(image_data, cmap='gray')  # CHANGE - commented this line
@@ -239,22 +242,27 @@ def load_models(checkpoint_pattern, checkpoint_no_pattern):
 def got_image(img):
 
     # Receive image
-    print('Got image')
+    # print('Got image')
 
     image_pil = Image.fromarray(img)  # convert numpy.ndarray to PIL image
 
-    plt.figure(2)
-    plt.imshow(image_pil, cmap='gray')
-    plt.show(block=False)
-    plt.pause(1.5)
-    plt.close()
+    # Show image that is about to be classified
+    # plt.figure(2)
+    # plt.imshow(image_pil, cmap='gray')
+    # plt.show(block=False)
+    # plt.pause(1.5)
+    # plt.close()
 
     # Send image to be analysed for model with or without pattern
     global counter_images
     counter_images += 1
     if counter_images % 2 != 0:
+        # New surface -> waits 5 secs to get picture
+        time.sleep(5)
         predict_pattern(image_pil)
     else:
+        # Same surface with different illumination -> waits 1 sec
+        time.sleep(1)
         predict_no_pattern(image_pil)
 
 
@@ -373,21 +381,21 @@ def predict_pattern(image_pil):
         if prediction == 'RISCOS':  # prediction is "riscos" -> break cycle
             defect_pattern = 'RISCOS'
             msg = 'SURFACE IS DAMAGED: RISCOS'
-            feedback('red', msg)
+            # feedback('red', msg)
             break
 
         elif prediction == 'AMOLGADELAS':  # prediction is "amolgadelas" -> break cycle
             defect_pattern = 'AMOLGADELAS'
 
             msg = 'SURFACE IS DAMAGED: AMOLGADELAS'
-            feedback('red', msg)
+            # feedback('red', msg)
             break
 
         elif prediction == 'PO':  # prediction is "PO" -> break cycle
             defect_pattern = 'PO'
 
-            msg = 'SURFACE IS DAMAGED: EXCESSO DE PÓ'
-            feedback('red', msg)
+            msg = 'SURFACE IS DAMAGED: EXCESSO DE PO'
+            # feedback('red', msg)
             break
 
         elif prediction == 'not_sure':  # certainty too low -> image is assumed to be ok
@@ -396,12 +404,14 @@ def predict_pattern(image_pil):
         if i == 4:
             defect_pattern = 'NONE'
             msg = 'SURFACE PATTERN IS OK'
-            feedback('green', msg)
+            print(msg)
+            # feedback('green', msg)
 
 
 def predict_no_pattern(original_image):
     global defect_no_pattern
     global certainty_no_pattern
+    global frame
 
     print('Predicting without pattern')
 
@@ -421,9 +431,8 @@ def predict_no_pattern(original_image):
 
         if prediction == 'FALTA_TINTA':  # prediction is "falta tinta" -> break cycle
             defect_no_pattern = 'FALTA_TINTA'
-
             msg = 'SURFACE IS DAMAGED: FALTA TINTA'
-            feedback('red', msg)
+            # feedback('red', msg)
             break
 
         elif prediction == 'not_sure':  # certainty too low -> image is assumed to be ok
@@ -432,7 +441,8 @@ def predict_no_pattern(original_image):
         if i == 4:
             defect_no_pattern = 'NONE'
             msg = 'SURFACE NO PATTERN IS OK'
-            feedback('green', msg)
+            print(msg)
+            # feedback('green', msg)
 
     final_decision()
 
@@ -484,6 +494,14 @@ def send_info_mes(result, nioBit, cycleCount):
     global defect_no_pattern
     global certainty_pattern
     global certainty_no_pattern
+    global cycle_count
+    global root
+    global frame
+    global my_label_class
+    global status
+    global my_label_img
+    global my_label_part
+    global my_label_total
 
     # Define header
     header = MESConnection.Header("-1")
@@ -523,13 +541,15 @@ def send_info_mes(result, nioBit, cycleCount):
 
     # Open socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # target_port = 55765
-    target_port = 55065
-    # target_host = "ims.mec.ua.pt"
-    target_host = 'localhost'
+
+    # target_port = 55065
+    # target_host = 'localhost'
+
+    target_port = 55765
+    target_host = "ims.mec.ua.pt"
     s.connect((target_host, target_port))
 
-    s.send(telegramBytes)  # Send bytes
+    s.sendall(telegramBytes)  # Send bytes
 
     # MES response
     # Remove the first four bytes (they are just the size of the message)
@@ -537,10 +557,53 @@ def send_info_mes(result, nioBit, cycleCount):
     # print(data + '\n')
 
     telegramResult = mesConnection.ResultTelegram().ProcessResponse(data)
-    print(telegramResult)
+    # print(telegramResult)
 
     time.sleep(1)
     s.close()  # Close socket every time a message is sent -> MES bug
+
+    # Update GUI
+    my_label_part.grid_forget()
+    my_label_part = Label(root, text="Identifier: " + identifier)
+    my_label_part.grid(row=0, column=0)
+
+    my_label_total.grid_forget()
+    my_label_total = Label(root, text="Total parts: " + str(cycle_count))
+    my_label_total.grid(row=2, column=1)
+
+    # Text for classfication
+    if defect_pattern != 'NONE' and defect_no_pattern != 'NONE':
+        text_class = defect_pattern + " + " + defect_no_pattern
+        fg = "white"
+        bg = "red"
+    elif defect_pattern == 'NONE' and defect_no_pattern != 'NONE':
+        text_class = defect_no_pattern
+        fg = "white"
+        bg = "red"
+    elif defect_pattern != 'NONE' and defect_no_pattern == 'NONE':
+        text_class = defect_pattern
+        fg = "white"
+        bg = "red"
+    else:
+        text_class = "OK"
+        fg = "white"
+        bg = "green"
+
+    my_label_class.grid_forget()
+    my_label_class = Label(root, text="Clasification: " + text_class, fg=fg, bg=bg)
+    my_label_class.grid(row=2, column=0)
+
+    status.grid_forget()
+    text = day + "/" + month + "/" + year + " - " + hour + ":" + min
+    status = Label(root, text=text, bd=1, relief=SUNKEN, anchor=E)
+    status.grid(row=3, column=0, columnspan=3, sticky=W + E)
+
+    my_label_img.grid_forget()
+    frame_img = Image.fromarray(frame)
+    my_img = ImageTk.PhotoImage(frame_img.resize((808, 608), Image.ANTIALIAS))
+    my_label_img = Label(image=my_img)
+    my_label_img.im = my_img
+    my_label_img.grid(row=1, column=0, columnspan=3)
 
 
 # =====================================================================================================
@@ -550,8 +613,46 @@ def main():
     # Part added by me
     global counter_images
     global secs
+    global root
+    global my_label_class
+    global status
+    global my_label_img
+    global my_label_part
+    global my_label_total
+
     counter_images = 0
     secs = time.time()
+
+    root = Tk()
+
+    # Title and icon
+    root.title('Defect detection on painted surfaces')
+    root.iconbitmap('logo.ico')
+
+    button_exit = Button(root, text="Exit", command=root.quit)
+    my_img = ImageTk.PhotoImage(Image.open("bosch-logo.jpg").resize((404, 304), Image.ANTIALIAS))
+    my_label_img = Label(image=my_img)
+    my_label_class = Label(root, text="Clasification: No image yet", fg="black")
+    my_label_total = Label(root, text="Total parts: 0")
+    my_label_part = Label(root, text="Identifier: No image yet")
+
+    currentDate = datetime.datetime.now()
+    year = str(currentDate.year)
+    month = str(currentDate.month)
+    day = str(currentDate.day)
+    hour = str(currentDate.hour)
+    min = str(currentDate.minute)
+    text = day + "/" + month + "/" + year + " - " + hour + ":" + min
+    status = Label(root, text=text, bd=1, relief=SUNKEN, anchor=E)
+
+    my_label_part.grid(row=0, column=0)
+    button_exit.grid(row=2, column=2, padx=15, pady=10)
+    my_label_img.grid(row=1, column=0, columnspan=3)
+    my_label_class.grid(row=2, column=0)
+    my_label_total.grid(row=2, column=1)
+    status.grid(row=3, column=0, columnspan=3, sticky=W + E)
+
+    # root.mainloop()
 
     # Models checkpoints
     checkpoint_filepath_pattern = '../../models/4_RISCOS_AMOLG_PO/model_1_best/cp.ckpt'
@@ -597,6 +698,8 @@ def main():
 
         result &= run_single_camera(cam)
         print('Camera %d example complete... \n' % i)
+
+    root.mainloop()
 
     # Release reference to camera
     del cam

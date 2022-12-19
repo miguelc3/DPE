@@ -4,8 +4,8 @@ import socket
 import time
 import datetime
 
-header = MESConnection.Header("1")
-locationHeader = MESConnection.LocationHeader("9999", "999", "1", "1", "1", "1", "1", "Defect_detection", "PC")
+header = MESConnection.Header("-1")
+locationHeader = MESConnection.LocationHeader("8080", "30", "1", "1", "1", "1", "1260", "Defect_detection", "PC")
 # resultHeader = MESConnection.ResultHeader("1", msg)  # msg was not defined
 resultHeader = MESConnection.ResultHeader("1", "999999999", workingCode="1")  # 1 = Good / 2 = Bad , product number
 
@@ -29,15 +29,14 @@ mesConnection = MESConnection(header, locationHeader, resultHeader, identifier,
                               resHeadEnabled=True)
 
 # ============ TEST ADD ARRAY ===================
-
-
-# array = MESConnection.customArray('teste')
-# array.addItems()
-# array.addItem(name='Defeito_1', value=0, resultState=2, unit="", locDetails="")
-# array = array.addItems()
+#
+array = MESConnection.customArray('TestInfo')
+# array.addItem(name="Riscos", value="90", unit="%")
+array = array.addItems()
 
 # Create telegram
-message = mesConnection.CreateTelegram()
+# message = mesConnection.CreateTelegram(array=array)
+message = mesConnection.CreateTelegram(array=array)
 
 # Transform the message into an array of bytes
 telegramBytes = mesConnection.BuildTelegram(message)
@@ -45,6 +44,8 @@ telegramBytes = mesConnection.BuildTelegram(message)
 # Create socket -> s wasn't defined
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 target_port = 55065
+# target_port = 55765
+# target_host = "ims.mec.ua.pt"
 target_host = "localhost"
 s.connect((target_host, target_port))
 

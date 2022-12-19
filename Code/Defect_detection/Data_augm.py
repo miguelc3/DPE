@@ -17,7 +17,6 @@ datagen = ImageDataGenerator(
                              height_shift_range=1.5,
                              shear_range=0.2,
                              zoom_range=[0.7, 1],
-                             # zoom_range=0.15,
                              horizontal_flip=True,
                              vertical_flip=True,
                              fill_mode='nearest'

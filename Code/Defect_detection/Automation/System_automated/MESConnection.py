@@ -212,7 +212,7 @@ class MESConnection:
             self.workCycleCount = workCycleCount
             self.cycleTimePrev = cycleTimePrev
 
-    def CreateTelegram(self):
+    def CreateTelegram(self, array=""):
         """
         Constructs the telegram to be sent
         Uses a header, locationHeader and BodyTelegram instances
@@ -250,9 +250,12 @@ class MESConnection:
                         "\" typeNo=\"" + self.BodyTelegram.typeNo + "\" typeVar=\"" + self.BodyTelegram.typeVar + \
                         "\" typeVersion=\"" + self.BodyTelegram.typeVersion + "\" workingCode=\"" + \
                         self.BodyTelegram.workingCode + "\" nioBits=\"" + self.BodyTelegram.nioBits + \
-                        "\" cycleTimePrev=\"" + self.BodyTelegram.cycleTimePrev + "\"/></structs></body>"
+                        "\" cycleTimePrev=\"" + self.BodyTelegram.cycleTimePrev + "\"/></structs>"
 
-        telegram += "</root>"
+        telegram += array
+        telegram += "</body></root>"
+
+        # print(telegram)
 
         return telegram
 
@@ -310,40 +313,42 @@ class MESConnection:
             resultState - If 1, operation was successful. If 2,
             unit - In this case, it would be the percentage
             locDetails - additional data
-            """
+
+            dataTypes:
+                - 8: Strings
+                - 4: floats
+                - 3: integer
+        """
 
         def __init__(self, arrayName):
             self.arrayName = arrayName
-
-            self.allItems = ("<array name =\"{}\">".format(self.arrayName) +
+            self.allItems = ("<structArrays>" +
+                             "<array name =\"{}\">".format(self.arrayName) +
                              "<structDef >" +
                              "<item name =\"name\" dataType =\"8\" />" +
                              "<item name =\"value\" dataType =\"4\" />" +
                              "<item name =\"unit\" dataType =\"8\" />" +
-                             "<item name =\"resultState\" dataType =\"3\" />" +
-                             "<item name =\"locDetails\" dataType =\"8\" />" +
                              "</structDef>" +
                              "<values>")
 
         # Since Python Strings are immutable, we need to create a new string. Python does not have an indexed insert
         # or replace, so I create a new string knowing the index where I need to add them
-        def addItem(self, name, value, resultState, unit, locDetails):
+        def addItem(self, name, value, unit):
 
             try:
-                val = int(value)
-                resultState = int(resultState)
+                certainty = float(value)
             except ValueError:
                 raise Exception(
-                    "Error, please check if \"value\" and \"resultState\" are int")
+                    "Error, please check if \"certainty\" is float")
 
-            self.allItems = self.allItems + "<item name=\"" + str(name) + "\" value=\"" + str(value) + "\" unit=\"" + \
-                            str(unit) + "\" resultState=\"" + str(resultState) + "\" locDetails=\"" + str(locDetails) \
-                            + "\" />"
+            self.allItems = self.allItems + "<item name=\"" + str(name) + "\" value=\"" + str(value) + "\" " \
+                                                    + " unit=\"" + str(unit) + "\" />"
 
         def addItems(self):
-            self.allItems = self.allItems + "</values></array>"
-            MESConnection.arrayItems = self.allItems
-            # return self.allItems
+            self.allItems = self.allItems + "</values></array></structArrays>"
+            MESConnection.allItems = self.allItems
+            # print(self.allItems)
+            return MESConnection.allItems
 
     class ResultTelegram:
         """ The location of the station:

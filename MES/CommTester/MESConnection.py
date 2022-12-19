@@ -106,7 +106,7 @@ class MESConnection:
                 "contentType=3" due to the standard body items structures in the telegrams.
         """
 
-        def __init__(self, eventSwitch, eventName="partProcessed", timeStamp="", version="2.1", eventId="1",
+        def __init__(self, eventSwitch, eventName="partProcessed", timeStamp="", version="1.0", eventId="1",
                      contentType="3"):
             """Return built Header"""
 

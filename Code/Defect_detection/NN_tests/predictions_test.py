@@ -1,4 +1,4 @@
-import tensorflow as  tf
+import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
@@ -103,8 +103,9 @@ def process(path):
 
 def main():
 
-    path_ckpt = '../models/4_RISCOS_AMOLG_PO/model_1_best/cp.ckpt'
-    model = load_model(path_ckpt)
+    # path_ckpt = '../models/4_RISCOS_AMOLG_PO/model_1_best/cp.ckpt'
+    # model = load_model(path_ckpt)
+    model = tf.keras.models.load_model('../models/4_RISCOS_AMOLG_PO/model_1')
 
     # DATADIR = "../../../imagens/DATASETS_pg/testes/pattern_40/*.png"
     IMG_PATH = "../../../imagens/Defeitos/Riscos/riscos_40/1.png"  # Path for image to predict
